@@ -12287,48 +12287,6 @@ proxyconfig: |-
     client_max_body_size 1126M;
 
     }
-
-  server {
-    if ($host = casestudy.{{ nginx_proxy_server_name }}) {
-        return 301 https://$host$request_uri;
-        }
-
-      listen       80;
-      server_name  casestudy.{{ nginx_proxy_server_name }};
-      return 404;
-    }
-
-  server {
-    listen                443 ssl;
-    ssl_certificate       /etc/secrets/site.crt;
-    ssl_certificate_key   /etc/secrets/site.key;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA HIGH !RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";
-    server_name *.casestudy.{{ nginx_proxy_server_name }} casestudy.{{ nginx_proxy_server_name }};
-{% if nginx_server_config is defined and nginx_server_config %}
-  {{ nginx_server_config | indent( width=6, indentfirst=True)  }}
-{% endif %}
-    # Limitting open connection per ip
-    limit_conn limitbyaddr {{ nginx_per_ip_connection_limit }};
-    proxy_set_header    Host              $host;
-    proxy_set_header    X-Real-IP         {{ nginx_client_public_ip_header | d('$remote_addr') }};
-    proxy_set_header    X-Forwarded-SSL   on;
-    proxy_set_header    X-Forwarded-Proto $scheme;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    if ($block_bad_uri) {
-       return 400;
-    }
-    ignore_invalid_headers off;
-    resolver {{ kube_dns_ip }} valid=30s;
-
-        # Moved to portal sub-path /Casestudy-tool
-    location / {
-      return 301 https://portal.{{ nginx_proxy_server_name }}/Casestudy-tool$request_uri;
-    }
-
-    client_max_body_size 1126M;
-
-    }
     
   server {
     if ($host = spv.{{ nginx_proxy_server_name }}) {
