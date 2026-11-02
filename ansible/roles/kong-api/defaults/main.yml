@@ -27700,9 +27700,27 @@ kong_apis:
       - name: request-size-limiting
         config.allowed_payload_size: "{{ small_request_size_limit }}"
 
-  - name: getAllFormConfigDetails
-    uris: "{{ formsConfig_service_prefix }}/v1/readFormDetails"
-    upstream_url: "{{ cb_ext_config_service_url }}/formsConfig/v1/readFormDetails"
+  - name: getPortalFormConfigDetails
+    uris: "{{ formsConfig_service_prefix }}/v1/readFormDetails/portal"
+    upstream_url: "{{ cb_ext_config_service_url }}/formsConfig/v1/readFormDetails/portal"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: getMobileFormConfigDetails
+    uris: "{{ formsConfig_service_prefix }}/v1/readFormDetails/mobile"
+    upstream_url: "{{ cb_ext_config_service_url }}/formsConfig/v1/readFormDetails/mobile"
     strip_uri: true
     plugins:
       - name: jwt
