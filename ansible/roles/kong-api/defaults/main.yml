@@ -66,7 +66,6 @@ otp_service_prefix: /otp
 sso_service_prefix: /sso
 cert_service_prefix: /cert
 cert_registry_service_prefix: /certreg
-public_cert_registry_service_prefix: /public/certreg
 desktop_app_prefix: /desktop
 license_api_prefix: /license
 report_service_prefix: /data/v1/report-service
@@ -5806,7 +5805,7 @@ kong_apis:
       config.allowed_payload_size: "{{ small_request_size_limit }}"
     
   - name: publicDownloadRegCertificateV2
-    uris: "{{ public_cert_registry_service_prefix }}/v2/certs/download"
+    uris: "/public{{ cert_registry_service_prefix }}/v2/certs/download"
     upstream_url: "{{ certificate_generator_service_url }}/v1/certs/legacy/generate"
     strip_uri: true
     plugins:
