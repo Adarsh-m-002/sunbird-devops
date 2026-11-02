@@ -66,6 +66,7 @@ otp_service_prefix: /otp
 sso_service_prefix: /sso
 cert_service_prefix: /cert
 cert_registry_service_prefix: /certreg
+public_cert_registry_service_prefix: /public/certreg
 desktop_app_prefix: /desktop
 license_api_prefix: /license
 report_service_prefix: /data/v1/report-service
@@ -5804,6 +5805,20 @@ kong_apis:
     - name: request-size-limiting
       config.allowed_payload_size: "{{ small_request_size_limit }}"
     
+  - name: publicDownloadRegCertificateV2
+    uris: "{{ public_cert_registry_service_prefix }}/v2/certs/download"
+    upstream_url: "{{ certificate_generator_service_url }}/v1/certs/legacy/generate"
+    strip_uri: true
+    plugins:
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ small_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
   - name: contentImportAPI
     uris: "{{ content_prefix }}/v1/import"
     upstream_url: "{{ content_service_url }}/content/v3/import"
