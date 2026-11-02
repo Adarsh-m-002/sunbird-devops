@@ -5804,6 +5804,20 @@ kong_apis:
     - name: request-size-limiting
       config.allowed_payload_size: "{{ small_request_size_limit }}"
     
+  - name: publicDownloadRegCertificateV2
+    uris: "{{ cert_registry_service_prefix }}/public/v2/certs/download"
+    upstream_url: "{{ certificate_generator_service_url }}/v1/certs/legacy/generate"
+    strip_uri: true
+    plugins:
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ small_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
   - name: contentImportAPI
     uris: "{{ content_prefix }}/v1/import"
     upstream_url: "{{ content_service_url }}/content/v3/import"
