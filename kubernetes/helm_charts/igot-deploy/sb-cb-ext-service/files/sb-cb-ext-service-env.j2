@@ -487,6 +487,12 @@ wingspan.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialec
 wingspan.datasource.driver-class-name=org.postgresql.Driver
 wingspan.jpa.properties.hibernate.format_sql=true
 wingspan.jpa.show-sql=false
+form.datasource.jdbc-url=jdbc:postgresql://{{ postgresql_host }}:{{ postgresql_port }}/form
+form.datasource.username={{ form_postgresql_username | default(postgresql_username_sunbird) }}
+form.datasource.password={{ form_postgresql_password | default(postgresql_password_sunbird) }}
+form.datasource.driver-class-name=org.postgresql.Driver
+form.datasource.read-only=true
+form.datasource.maximum-pool-size=5
 igot.es.user.form.index=fs-forms-data
 es.form.index.type=_doc
 bp.user.enrolment.report.container.name=gcpbpreports
@@ -563,9 +569,9 @@ bp.assignment.ans.folder.name=bp-assignment
 bp.assignment.answer.file.upload.max-size-kb=5000
 bp.assignment.answer.file.upload.allowed-extensions=pdf,doc,docx
 
-form.service.host=http://form-service:8099/
+form.service.host=http://cb-ext-form-service:8099/
 igot.es.user.form.data.index.v2=fs-forms-data-alias-v2
-get.v2.formbyid.path=forms/v2/getFormById
+get.v2.formbyid.path=forms/v3/getFormById
 
 email.domain.not.allowed=Your email domain isn\u2019t recognised \u2014 please contact your department for registration.
 email.invalid=Invalid Email ID.

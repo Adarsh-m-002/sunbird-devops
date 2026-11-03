@@ -46,6 +46,13 @@ form.search-max-page-size=200
 form.search-default-page-size=10
 form.es-timeout-seconds=30
 form.search-index=fs-forms-alias-v2
+form.nps-form-id={{ nps_form_id | default('') }}
+form.nps-form-secondary-id={{ nps_form_secondary_id | default('') }}
+form.nps-form-upgraded-id={{ platform_rating_survey_id | default('') }}
+form.nps-topic={{env}}.nps_submission
+form.nps-upgraded-topic={{env}}.nps_upgraded_submission
+form.nps-data-index=fs-forms-data
+form.nps-activity-log-index=fs-forms-activity-log
 form.search-supported-context-types=form,completionSurvey,peerValidationSurvey,assignment
 form.search-allowed-filter-keys=formId,status,contextType,createdBy,orgId,startDateFrom,startDateTo,endDateFrom,endDateTo
 
