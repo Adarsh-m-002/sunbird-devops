@@ -2,8 +2,8 @@ server.port=${PORT:8080}
 spring.application.name=cb-ext-rts-service
 logging.level.root=INFO
 
-# Shown in /stats, in SESSION_STATE and in log lines. In Kubernetes set POD_NAME from metadata.name (Downward API).
-pod.name=${POD_NAME:local-1}
+# Shown in /stats, in SESSION_STATE and in log lines: POD_NAME if set, else HOSTNAME (= the pod name in Kubernetes).
+pod.name=${POD_NAME:${HOSTNAME:local-1}}
 
 rts.ws.path=/ws
 rts.ws.max-frame-payload=65536

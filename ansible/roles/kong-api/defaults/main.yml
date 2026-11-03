@@ -5824,6 +5824,20 @@ kong_apis:
     - name: request-size-limiting
       config.allowed_payload_size: "{{ small_request_size_limit }}"
     
+  - name: publicDownloadRegCertificateV2
+    uris: "{{ cert_registry_service_prefix }}/public/v2/certs/download"
+    upstream_url: "{{ certificate_generator_service_url }}/v1/certs/legacy/generate"
+    strip_uri: true
+    plugins:
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ small_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
   - name: contentImportAPI
     uris: "{{ content_prefix }}/v1/import"
     upstream_url: "{{ content_service_url }}/content/v3/import"
@@ -27720,6 +27734,60 @@ kong_apis:
       - name: request-size-limiting
         config.allowed_payload_size: "{{ small_request_size_limit }}"
 
+  - name: getPortalFormConfigDetails
+    uris: "{{ formsConfig_service_prefix }}/v1/readFormDetails/portal"
+    upstream_url: "{{ cb_ext_config_service_url }}/formsConfig/v1/readFormDetails/portal"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: getMobileFormConfigDetails
+    uris: "{{ formsConfig_service_prefix }}/v1/readFormDetails/mobile"
+    upstream_url: "{{ cb_ext_config_service_url }}/formsConfig/v1/readFormDetails/mobile"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: getFormConfigById
+    uris: "{{ formsConfig_service_prefix }}/v1/readById"
+    upstream_url: "{{ cb_ext_config_service_url }}/formsConfig/v1/read"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
   - name: ltiAdminConfig
     uris: "{{ ciosIntegration_prefix }}/v1/lti/admin/platform-config"
     upstream_url: "{{ cios_content_service_url }}/ciosIntegration/v1/lti/admin/platform-config"
@@ -27767,6 +27835,24 @@ kong_apis:
       - name: acl
         config.whitelist:
           - 'contentUpdate'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: ciosLtiSsoTest
+    uris: "{{ ciosIntegration_prefix }}/lti/ssotest"
+    upstream_url: "{{ cios_content_service_url }}/ciosIntegration/lti/ssotest"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'contentAccess'
       - name: rate-limiting
         config.policy: local
         config.hour: "{{ medium_rate_limit_per_hour }}"
