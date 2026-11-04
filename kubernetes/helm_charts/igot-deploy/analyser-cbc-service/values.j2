@@ -27,7 +27,7 @@ strategy:
   maxunavailable: {{ analyser_cbc_maxunavailable|default('25%') }}
 
 gcpanalysercbccredentialsjson: |-
- {{gcp_gemini_upload_service_account}}
+ {{analysercbc_gcp_service_account}}
 
 
 serviceMonitor:
