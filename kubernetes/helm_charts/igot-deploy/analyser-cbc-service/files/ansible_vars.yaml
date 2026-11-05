@@ -1,0 +1,31 @@
+---
+# vars file for deploy-vega-service
+# For script
+release_name: "{{ network_alias_analyser_cbc_service }}"
+user_friendly_name: analyser_cbc service
+#template_compose_file_name: ui-spv-igot.j2
+template_env_file_name: "analyser-cbc-env.j2"
+compose_file_name: "{{ service_analyser_cbc_service }}.yml"
+env_file_name: "{{ service_analyser_cbc_service }}.env"
+helm_env_file_location: "../helm_charts/igot-deploy/templates/"
+helm_env_file_name: "{{ helm_env_file_location }}/{{ service_analyser_cbc_service }}.env"
+
+
+env_file_deployment_location: "{{ env_files_dir }}/{{ env_file_name }}"
+compose_file_deployment_location: "{{ compose_files_dir }}/{{ compose_file_name }}"
+
+# For service
+application_port: "{{ service_analyser_cbc_port }}"
+image_name: "{{ image_analyser_cbc_service }}"
+tag: "{{ tags_analyser_cbc_service }}"
+host_port: "{{ application_port }}"
+docker_port: "{{ application_port }}"
+replicas: "{{ service_replicas_analyser_cbc_service }}"
+reserved_memory: "{{ service_mem_reserved_analyser_cbc_service }}"
+limited_memory: "{{ service_mem_limit_analyser_cbc_service }}"
+health_check_endpoint: http://127.0.0.1:{{ docker_port }}/healthcheck
+network_alias_name: "{{ network_alias_analyser_cbc_service }}"
+docker_service_stack_name: ui
+docker_service_name: "{{ service_analyser_cbc_service }}"
+force_reload: "{{ force_reload_analyser_cbc_service }}"
+
