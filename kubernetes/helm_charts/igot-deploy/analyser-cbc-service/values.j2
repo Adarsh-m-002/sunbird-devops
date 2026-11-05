@@ -1,0 +1,45 @@
+### Default variable file for analyser_cbc-service ###
+
+namespace: {{ namespace }}
+imagepullsecrets: {{ imagepullsecrets }}
+dockerhub: {{ docker_hub_url }}
+
+
+env:
+  javaoptions: {{analyser_cbc_java_mem_limit|default('-Xmx600m')}}
+
+replicaCount: {{analyser_cbc_replicacount|default(1)}}
+repository: {{ image_analyser_cbc_service }}
+image_tag: {{ image_tag }}
+resources:
+  requests:
+    cpu: {{analyser_cbc_cpu_req|default('200m')}}
+    memory: {{analyser_cbc_mem_req|default('200Mi')}}
+  limits:
+    cpu: {{analyser_cbc_cpu_limit|default('500m')}}
+    memory: {{analyser_cbc_mem_limit|default('800Mi')}}
+network:
+  port: {{ service_analyser_cbc_port }}
+  targetport: {{ service_analyser_cbc_port }}
+strategy:
+  type: RollingUpdate
+  maxsurge: {{ analyser_cbc_maxsurge|default('25%') }}
+  maxunavailable: {{ analyser_cbc_maxunavailable|default('25%') }}
+
+gcpanalysercbccredentialsjson: |-
+ {{analysercbc_gcp_service_account}}
+
+
+serviceMonitor:
+  enabled: true
+  labels: # labels with which the prometheus choose the serviceMonitor
+    app: prometheus-operator
+    release: prometheus-operator
+
+autoscaling:
+  enabled: {{ analyser_cbc_autoscaling_enabled | default('false') }}
+  minReplicas: {{ analyser_cbc_autoscaling_minReplicas|default(1) }}
+  maxReplicas: {{ analyser_cbc_autoscaling_maxReplicas|default(2) }}
+  targetCPUUtilizationPercentage: {{ analyser_cbc_autoscaling_targetCPUUtilizationPercentage|default(60) }}
+  targetMemoryUtilizationPercentage: {{ analyser_cbc_autoscaling_targetMemoryUtilizationPercentage|default('') }}
+
