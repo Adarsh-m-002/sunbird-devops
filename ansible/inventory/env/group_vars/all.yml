@@ -781,6 +781,7 @@ service_deterministic_chatbot: deterministic-chatbot
 service_cb_ext_form_service: cb-ext-form-service
 service_aurora_igot_ticketing_service: aurora-igot-ticketing-service
 service_cb_ext_scorm_validation_service: cb-ext-scorm-validation
+service_analyser_cbc_service: analyser-cbc-service
 service_cb_ext_rts_service: cb-ext-rts-service
 
 # Ports
@@ -895,6 +896,7 @@ service_deterministic_chatbot_port: 8000
 service_cb_ext_form_port: 8099
 service_aurora_igot_ticketing_port: 4020
 service_cb_ext_scorm_validation_port: 7001
+service_analyser_cbc_port: 5000
 service_cb_ext_rts_port: 8080
 
 # Network alias names, so that one service can talk to another
@@ -992,6 +994,7 @@ network_alias_deterministic_chatbot: deterministic-chatbot
 network_alias_cb_ext_form_service: cb-ext-form-service
 network_alias_aurora_igot_ticketing_service: aurora-igot-ticketing-service
 network_alias_cb_ext_scorm_validation_service: cb-ext-scorm-validation
+network_alias_analyser_cbc_service: analyser-cbc-service
 network_alias_cb_ext_rts_service: cb-ext-rts-service
 
 # Image names, this is used by the service alone, but since we want to have all the images in one place, we are oncfiguring the images here
@@ -1086,6 +1089,7 @@ image_deterministic_chatbot_service: deterministic-chatbot
 image_cb_ext_form_service: cb-ext-form-service
 image_aurora_igot_ticketing_service: aurora-igot-ticketing-service
 image_cb_ext_scorm_validation_service: cb-ext-scorm-validation
+image_analyser_cbc_service: analyser-cbc-service
 image_cb_ext_rts_service: cb-ext-rts-service
 
 #####################bulk-upload-spv#########
