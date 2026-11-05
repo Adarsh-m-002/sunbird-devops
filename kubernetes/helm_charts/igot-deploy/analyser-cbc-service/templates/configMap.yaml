@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gcpanalysercbccredentialsjson
+  namespace: {{ .Values.namespace }}
+data:
+  gcpanalysercbccredentials.json: |
+{{ .Values.gcpanalysercbccredentialsjson | indent 4 }}
+
+---

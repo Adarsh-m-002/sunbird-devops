@@ -1,0 +1,10 @@
+SERVICE_ENVIRONMENT={{env}}
+LOG_LEVEL=INFO
+OPENAI_API_KEY={{analyser_cbc_openai_api_key}}
+DATABASE_URL={{ cbc_case_study_db_dsn }}
+USE_GEMINI=true
+GOOGLE_PROJECT_ID={{ analyser_cbc_gcp_gemini_project_id }}
+GOOGLE_LOCATION=global
+GENAI_MODEL_NAME={{ analyser_cbc_vision_model }}
+GOOGLE_APPLICATION_CREDENTIALS=/app/gcp/gcpanalysercbccredentials.json
+STREAMLIT_SERVER_BASE_URL_PATH={{ analyser_cbc_base_url_path | default('') }}
