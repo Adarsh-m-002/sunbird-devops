@@ -27843,19 +27843,16 @@ kong_apis:
         config.allowed_payload_size: "{{ medium_request_size_limit }}"
 
 
-  - name: LtiDeeplinkReturn
+  - name: ltiDeepLinkingReturn
     uris: "{{ ciosIntegration_prefix }}/lti/deeplink/return"
     upstream_url: "{{ cios_content_service_url }}/ciosIntegration/lti/deeplink/return"
     strip_uri: true
     plugins:
       - name: cors
       - "{{ statsd_pulgin }}"
-      - name: acl
-        config.whitelist:
-          - 'contentAccess'
       - name: rate-limiting
         config.policy: local
         config.hour: "{{ medium_rate_limit_per_hour }}"
-        config.limit_by: credential
+        config.limit_by: ip
       - name: request-size-limiting
         config.allowed_payload_size: "{{ medium_request_size_limit }}"
