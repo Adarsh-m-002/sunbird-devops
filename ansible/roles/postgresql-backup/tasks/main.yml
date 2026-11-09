@@ -10,7 +10,7 @@
 - name: Save backup
   command: bash -lc "pg_dumpall | gzip > {{ postgresql_backup_gzip_file_path }}"
   become_user: "{{ postgresql_user }}"
-  async: 28800
+  async: 43200
   poll: 10
 
 - name: upload to gcs
