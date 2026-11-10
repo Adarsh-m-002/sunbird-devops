@@ -1,0 +1,12 @@
+
+---
+- name: Delete user
+  user:
+    name: "{{ ssh_user }}"
+    state: absent
+    remove: yes
+
+- name: Delete user group
+  group:
+    name: "{{ ssh_user }}"
+    state: absent

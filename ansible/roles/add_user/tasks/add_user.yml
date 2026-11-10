@@ -1,0 +1,42 @@
+
+---
+- name: Validate required variables
+  assert:
+    that:
+      - ssh_user is defined
+      - ssh_user | length > 0
+      - public_key is defined
+      - public_key | length > 0
+    fail_msg: "ssh_user and public_key are required."
+
+- name: Create user group
+  group:
+    name: "{{ ssh_user }}"
+    state: present
+
+- name: Create user
+  user:
+    name: "{{ ssh_user }}"
+    state: present
+    group: "{{ ssh_user }}"
+    groups: "{{ user_groups }}"
+    append: yes
+    shell: "{{ user_shell }}"
+    createhome: "{{ user_create_home }}"
+    password: "{{ password | default(omit) }}"
+    update_password: on_create
+
+- name: Add SSH public key
+  authorized_key:
+    user: "{{ ssh_user }}"
+    key: "{{ public_key }}"
+    state: present
+    manage_dir: yes
+
+- name: Set home directory ownership
+  file:
+    path: "/home/{{ ssh_user }}"
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    state: directory
+    recurse: no

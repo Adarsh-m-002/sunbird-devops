@@ -1,0 +1,7 @@
+
+---
+ansible_python_interpreter: /opt/ansible-python311/bin/python
+
+user_shell: /bin/bash
+user_groups: sudo
+user_create_home: yes
