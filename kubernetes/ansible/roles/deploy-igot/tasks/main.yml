@@ -93,7 +93,8 @@
     "cb-ext-config-service",
     "cb-ext-form-service",
     "cb-ext-scorm-validation",
-    "analyser-cbc-service"
+    "analyser-cbc-service",
+    "cb-ext-survey-service"
     ]
 
 - name: helm upgrade
