@@ -64,7 +64,7 @@ spec:
  #         subPath: lms-service_logback.xml
 {{- $keys := .Files.Glob "keys/*" }}
 {{- if $keys }}
-        - mountPath: {{ .Values.cb_ext_form_service_device_basepath }}
+        - mountPath: {{ .Values.cb_ext_survey_service_device_basepath }}
           name: access-keys
 {{- end }}
       volumes:
