@@ -88,6 +88,7 @@ workflow_handler_service_prefix: /workflow
 player_prefix: /player
 registry_service_prefix: /rc
 forms_service_prefix: /forms
+survey_service_prefix: /survey
 profanity_moderator_admin_prefix: /moderatoradmin
 mdo_content_prefix: /mdo/content
 master_data_service_prefix: /masterData
@@ -269,6 +270,7 @@ ai_itsm_chatbot_service_url: "http://deterministic-chatbot:8000"
 ai_itsm_aurora_service_url: "http://aurora-igot-ticketing-service:4020"
 cb_ext_scorm_validation_service_url : "http://cb-ext-scorm-validation:7001"
 cb_ext_form_service_url: "http://cb-ext-form-service:8099"
+cb_ext_survey_service_url: "http://cb-ext-survey-service:8099"
 
 premium_consumer_rate_limits:
   - api: createContent
@@ -27787,3 +27789,129 @@ kong_apis:
         config.limit_by: credential
       - name: request-size-limiting
         config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: cbExtSurveyCreateForm
+    uris: "{{ survey_service_prefix }}/v2/createForm"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/createForm"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: cbExtSurveyUpdateForm
+    uris: "{{ survey_service_prefix }}/v2/updateForm"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/updateForm"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: cbExtSurveyGetFormById
+    uris: "{{ survey_service_prefix }}/v2/getFormById"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/getFormById"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: cbExtSurveySaveFormSubmit
+    uris: "{{ survey_service_prefix }}/v2/saveFormSubmit"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/saveFormSubmit"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: cbExtSurveyGetApplicationsById
+    uris: "{{ survey_service_prefix }}/v2/getApplicationsById"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/getApplicationsById"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: cbExtSurveyBulkGetApplicationsById
+    uris: "{{ survey_service_prefix }}/v2/bulkGetApplicationsById"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/bulkGetApplicationsById"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: cbExtSurveySubmissionsSearch
+    uris: "{{ survey_service_prefix }}/v2/submissions/search"
+    upstream_url: "{{ cb_ext_survey_service_url }}/forms/v3/submissions/search"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'dataAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
