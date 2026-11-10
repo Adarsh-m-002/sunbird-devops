@@ -15,7 +15,7 @@ compose_file_deployment_location: "{{ compose_files_dir }}/{{ compose_file_name 
 user_friendly_name: cb_ext_survey_service
 
 # For service
-application_port: "{{ service_cb_ext_form_port }}"
+application_port: "{{ service_cb_ext_survey_port }}"
 image_name: "{{ image_cb_ext_survey_service }}"
 tag: "{{ tags_cb_ext_survey_service }}"
 host_port: "{{ application_port }}"
