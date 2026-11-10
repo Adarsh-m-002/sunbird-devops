@@ -1,14 +1,30 @@
+
 ---
-- hosts: "bastion:{{ remote }}"
+- name: Add SSH user
+  hosts: "bastion:{{ remote }}"
   become: yes
   roles:
     - add_user
   tags:
     - add-user
 
-- hosts: "bastion:{{ remote }}"
+- name: Delete SSH user
+  hosts: "bastion:{{ remote }}"
   become: yes
   tasks:
-    - user: name="{{ ssh_user }}" state=absent remove=yes
+    - name: Remove user and home directory
+      user:
+        name: "{{ ssh_user }}"
+        state: absent
+        remove: yes
+      tags:
+        - delete-user
+
+    - name: Remove user group
+      group:
+        name: "{{ ssh_user }}"
+        state: absent
+      tags:
+        - delete-user
   tags:
     - delete-user

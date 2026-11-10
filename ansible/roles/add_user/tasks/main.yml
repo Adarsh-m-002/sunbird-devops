@@ -1,11 +1,12 @@
 
 ---
+- name: Setup Python environment
+  import_tasks: python_setup.yml
+  tags:
+    - always
+
 - name: Add user
   import_tasks: add_user.yml
   tags:
     - add-user
 
-- name: Delete user
-  import_tasks: delete_user.yml
-  tags:
-    - delete-user
