@@ -75,7 +75,7 @@ spec:
 {{- if $keys }}
       - name: access-keys
         secret:
-          secretName: cb-ext-form-service-access-keys
+          secretName: cb-ext-survey-service-access-keys
 {{- end }}
 
 ---
