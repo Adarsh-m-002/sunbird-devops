@@ -782,7 +782,7 @@ service_cb_ext_form_service: cb-ext-form-service
 service_aurora_igot_ticketing_service: aurora-igot-ticketing-service
 service_cb_ext_scorm_validation_service: cb-ext-scorm-validation
 service_analyser_cbc_service: analyser-cbc-service
-service_cb_ext_rts_service: cb-ext-rts-service
+service_cb_ext_survey_service: cb-ext-survey-service
 
 # Ports
 service_bulk_upload_port: 3009
@@ -897,7 +897,7 @@ service_cb_ext_form_port: 8099
 service_aurora_igot_ticketing_port: 4020
 service_cb_ext_scorm_validation_port: 7001
 service_analyser_cbc_port: 5000
-service_cb_ext_rts_port: 8080
+service_cb_ext_survey_port: 8099
 
 # Network alias names, so that one service can talk to another
 network_alias_content_service: private-content-service
@@ -995,7 +995,7 @@ network_alias_cb_ext_form_service: cb-ext-form-service
 network_alias_aurora_igot_ticketing_service: aurora-igot-ticketing-service
 network_alias_cb_ext_scorm_validation_service: cb-ext-scorm-validation
 network_alias_analyser_cbc_service: analyser-cbc-service
-network_alias_cb_ext_rts_service: cb-ext-rts-service
+network_alias_cb_ext_survey_service: cb-ext-survey-service
 
 # Image names, this is used by the service alone, but since we want to have all the images in one place, we are oncfiguring the images here
 image_ui_static: ui-static
@@ -1090,7 +1090,7 @@ image_cb_ext_form_service: cb-ext-form-service
 image_aurora_igot_ticketing_service: aurora-igot-ticketing-service
 image_cb_ext_scorm_validation_service: cb-ext-scorm-validation
 image_analyser_cbc_service: analyser-cbc-service
-image_cb_ext_rts_service: cb-ext-rts-service
+image_cb_ext_survey_service: cb-ext-form-service
 
 #####################bulk-upload-spv#########
 host_bulk_upload: /mydata/bulk_upload
