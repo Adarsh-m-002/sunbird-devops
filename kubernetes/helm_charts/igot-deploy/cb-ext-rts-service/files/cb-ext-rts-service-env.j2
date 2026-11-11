@@ -32,3 +32,22 @@ management.endpoints.web.exposure.include=health,info,metrics,prometheus
 
 spring.data.redis.host={{cb_ext_rts_redis}}
 spring.data.redis.port={{cb_ext_rts_redis_port}}
+spring.data.redis.password={{ cb_ext_rts_redis_password | default('') }}
+
+# ---- Keycloak token check on POST /rts/v1/join (same as cb-ext-assessment-service) ----
+# Realm public keys mounted at /keys/<kid> by deploy-igot (core_vault_sunbird_sso_publickey)
+accesstoken.publickey.basepath={{ cb_ext_rts_backend_basepath | default('/keys/') }}
+# Token iss must be sso.url + "realms/" + sso.realm
+sso.url=https://{{ domain_name }}/auth/
+sso.realm={{ keycloak_sso_realm }}
+# pass: POST /rts/v1/join with the Keycloak token, then /ws?pass=... ; dev: identity in the URL, load-test runs only
+rts.auth.mode={{ cb_ext_rts_auth_mode | default('pass') }}
+# jwt: Keycloak token ; demo: "Bearer demo:<userId>", anyone (testing only)
+rts.auth.identity={{ cb_ext_rts_auth_identity | default('jwt') }}
+rts.auth.jwt.role-claim={{ cb_ext_rts_role_claim | default('realm_access.roles') }}
+rts.auth.jwt.coordinator-roles={{ cb_ext_rts_coordinator_roles | default('PROGRAM_COORDINATOR') }}
+# X-Admin-Key for PUT /admin/sessions/{code} (rosters); empty = endpoint off
+rts.auth.admin-key={{ cb_ext_rts_admin_key | default('') }}
+# Testing only: a code with no roster is open to learners, the first PC claim wins
+rts.auth.dev-claim-coordinator={{ cb_ext_rts_dev_claim_coordinator | default('false') }}
+rts.auth.allowed-origins=https://{{ domain_name }}
