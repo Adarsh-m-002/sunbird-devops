@@ -29,7 +29,7 @@
         dest: "{{ helm_env_file_location }}/{{ item | basename}}.env"
       with_fileglob:
         - "{{ template_shared_env_file_name }}"
-      when: release_name not in ['ml-kb-portal-service','pdf-generator-service','ml-template-validation-portal','ml-template-validation-backend-service','nlp-search-service','certificate-generator-service','report-generation-service','comment-tree-service','cb-search-service','cb-ext-userprofile-service','cb-notification-service','cb-ext-course-service','cb-notification-wrapper-service','custom-field-service','kb-agent-service','id-mapping-service','content-moderation-service','cb-ext-workallocation-tool-service','itsm-bot-service','cbp-ai-service','supporttool-service','ai-assessment-service','ai-cbp-mdo-service','ai-ui-assessment-service','ai-assessment-worker-service','cb-ext-form-service','cbp-ai-ui','deterministic-chatbot','aurora-igot-ticketing-service','cb-ext-survey-service']
+      when: release_name not in ['ml-kb-portal-service','pdf-generator-service','ml-template-validation-portal','ml-template-validation-backend-service','nlp-search-service','certificate-generator-service','report-generation-service','comment-tree-service','cb-search-service','cb-ext-userprofile-service','cb-notification-service','cb-ext-course-service','cb-notification-wrapper-service','custom-field-service','kb-agent-service','id-mapping-service','content-moderation-service','cb-ext-workallocation-tool-service','itsm-bot-service','cbp-ai-service','supporttool-service','ai-assessment-service','ai-cbp-mdo-service','ai-ui-assessment-service','ai-assessment-worker-service','cb-ext-form-service','cbp-ai-ui','deterministic-chatbot','aurora-igot-ticketing-service','cb-ext-survey-service','cb-org-hierarchy-service']
     - name: template helm env file
       template:
         src: "{{ item }}"
@@ -95,7 +95,8 @@
     "cb-ext-scorm-validation",
     "analyser-cbc-service",
     "cb-ext-survey-service",
-    "cb-ext-rts-service"
+    "cb-ext-rts-service",
+    "cb-org-hierarchy-service"
     ]
 
 - name: helm upgrade
