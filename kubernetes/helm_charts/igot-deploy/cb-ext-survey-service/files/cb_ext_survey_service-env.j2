@@ -1,0 +1,107 @@
+spring.application.name=form
+server.port=8099
+spring.datasource.url=jdbc:postgresql://{{ postgresql_sankalpa_host }}:{{ postgresql_port }}/form
+spring.datasource.username={{postgresql_username_sankalpa }}
+spring.datasource.password={{ postgresql_password_sankalpa }}
+spring.jpa.show-sql=false
+form.allowed-sort=createdAt,updatedAt,title,status,startDate,endDate
+form.allowed-facets=status,contextType,orgId,createdBy
+
+spring.datasource.hikari.maximum-pool-size=60
+spring.datasource.hikari.minimum-idle=10
+spring.datasource.hikari.connection-timeout=5000
+
+spring.jpa.properties.hibernate.format_sql=false
+logging.level.com.karmayogi.form=WARN
+logging.level.org.hibernate.SQL=OFF
+logging.level.org.hibernate.type=OFF
+
+# Exact match filters
+form.filter-field-map.status=status
+form.filter-field-map.contextType=contextType
+form.filter-field-map.createdBy=createdBy
+form.filter-field-map.orgId=orgId
+form.filter-field-map.formId=formId
+form.filter-field-map.batchId=batchId
+form.filter-field-map.courseId=courseId
+
+# Date FROM filters
+form.date-from-map.startDateFrom=createdAt
+form.date-from-map.endDateFrom=endDate
+
+# Date TO filters
+form.date-to-map.startDateTo=createdAt
+form.date-to-map.endDateTo=endDate
+
+spring.data.redis.host={{ kp_redis_ip }}
+spring.data.redis.port=6379
+form.cache.ttl.hours=1
+
+form.kafka.bootstrap-servers={{ kafka_servers_list }}
+form.kafka.topic.form-events={{env}}.sankalpsurvey.events.create
+form.kafka.consumer.group-id={{env}}.sankalpsurvey-es-sync-group
+
+form.search-max-page=1000
+form.search-max-page-size=200
+form.search-default-page-size=10
+form.es-timeout-seconds=30
+form.search-index=fs-forms-alias-v2
+form.nps-form-id={{ nps_form_id | default('') }}
+form.nps-form-secondary-id={{ nps_form_secondary_id | default('') }}
+form.nps-form-upgraded-id={{ platform_rating_survey_id | default('') }}
+form.nps-topic={{env}}.nps_submission
+form.nps-upgraded-topic={{env}}.sankalpsurveynps_upgraded_submission
+form.nps-data-index=fs-forms-data
+form.nps-activity-log-index=fs-forms-activity-log
+form.search-supported-context-types=form,completionSurvey,peerValidationSurvey,assignment,sankalp
+form.search-allowed-filter-keys=formId,status,contextType,createdBy,orgId,startDateFrom,startDateTo,endDateFrom,endDateTo
+
+form.submission-allowed-filter-keys=formId,status,createdBy,createdDate,submittedBy,submittedDate,contextId,updatedBy,updatedDate,additionalProperties.batchId,contextType,contextOrgId
+form.form-context-hide-creator-fields=AGKPublicSurvey,completionSurvey
+form.max-allowed-filter-list-size=50
+form.validation-url-allowed-keys=assignmentUrl,thumbnailUrl,submitUrl,thumbnail
+form.validation-url-allowed-domains=portal.dev.karmayogibharat.net,igot.gov.in
+
+sso.realm={{ keycloak_realm_name }}
+sso.url={{ keycloak_domain }}/
+accesstoken.publickey.basepath=/keys/
+
+#Cassandra
+spring.cassandra.startupTimeoutInSeconds=100000
+cassandra.config.host={{ sunbird_cassandra_db_host }}
+spring.cassandra.contact-points={{ sunbird_cassandra_db_host }}
+spring.cassandra.port=9042
+spring.cassandra.keyspace-name={{ keyspace_sunbird }}
+spring.cassandra.username={{ cassandra_username }}
+spring.cassandra.password={{ cassandra_password }}
+spring.cassandra.local-datacenter=DC1
+sunbird_cassandra_consistency_level=ONE
+form.organisation-fields=orgname
+form.peer-survey-max-custom-questions=2
+form.peer-survey-allowed-additional-properties=identifier,triggerAfter,completionLookBack,thumbnail,duration,publishedOn,isSpvCreated
+form.form-index-v2=fs-forms-alias-v2
+
+form.peer-validation-notify-topic={{env}}.sankalpsurvey.notification.bulk.create
+form.peer-validation-status-update-topic={{env}}.peer.sankalpsurvey.validation.status.update
+form.peer-validation-submission-action-topic={{env}}.peer.sankalpsurvey.evaluation.status.update
+peer.survey.notification.read.topic={{env}}.peer.sankalpsurvey.survey.notification.read
+peer.survey.notification.sent.topic={{env}}.peer.sankalpsurvey.survey.notification.sent
+peer.survey.notification.read.group={{env}}.sankalpsurvey.service.peer.survey.consumer
+
+form.attachment-allowed-domains=storage.googleapis.com,portal.dev.karmayogibharat.net
+
+form.elasticsearch.host={{ elasticsearch_host }}
+form.elasticsearch.port={{ elasticsearch_http_port }}
+form.elasticsearch.scheme=http
+form.elasticsearch.index=fs-forms-alias-v2
+
+form.sb-url=http://learner-service:9000
+form.user-search-end-point=/private/user/v1/search
+
+form.allowed-field-property-keys=refApi,logicalGroupCode,name,notApplicable,fieldType,values,width,isRequired,order,parentId,identifier,select,selected,field,displayName,optional,disabled
+form.allowed-form-property-keys=title,meta,fields,clientVersion,contextType,additionalProperties,version
+
+max.allowed.form.title.length=100
+
+form.content-base-url=http://content-service:9000
+form.allowed-context-types=form,assignment,peerValidationSurvey,completionSurvey,AGKPublicSurvey,sankalp

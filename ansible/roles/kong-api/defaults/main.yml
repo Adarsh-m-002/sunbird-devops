@@ -88,6 +88,7 @@ workflow_handler_service_prefix: /workflow
 player_prefix: /player
 registry_service_prefix: /rc
 forms_service_prefix: /forms
+survey_service_prefix: /survey
 profanity_moderator_admin_prefix: /moderatoradmin
 mdo_content_prefix: /mdo/content
 master_data_service_prefix: /masterData

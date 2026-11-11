@@ -1,0 +1,43 @@
+### Default variable file for cb-ext-survey-service ###
+
+namespace: {{ namespace }}
+imagepullsecrets: {{ imagepullsecrets }}
+dockerhub: {{ docker_hub_url }}
+
+
+env:
+  javaoptions: {{cb_ext_survey_java_mem_limit|default('-Xmx600m')}}
+
+replicaCount: {{cb_ext_survey_replicacount|default(1)}}
+repository: {{ image_cb_ext_survey_service }}
+image_tag: {{ image_tag }}
+resources:
+  requests:
+    cpu: {{cb_ext_survey_cpu_req|default('100m')}}
+    memory: {{cb_ext_survey_mem_req|default('100Mi')}}
+  limits:
+    cpu: {{cb_ext_survey_cpu_limit|default('1')}}
+    memory: {{cb_ext_survey_mem_limit|default('1024Mi')}}
+network:
+  port: {{ service_cb_ext_survey_port }}
+  targetport: {{ service_cb_ext_survey_port }}
+strategy:
+  type: RollingUpdate
+  maxsurge: {{ cb_ext_survey_maxsurge|default('25%') }}
+  maxunavailable: {{ cb_ext_survey_maxunavailable|default('25%') }}
+
+cb_ext_survey_service_device_basepath: {{ cb_ext_survey_service_device_basepath | default('/keys/') }}
+
+serviceMonitor:
+  enabled: true
+  labels: # labels with which the prometheus choose the serviceMonitor
+    app: prometheus-operator
+    release: prometheus-operator
+
+autoscaling:
+  enabled: {{ cb_ext_survey_service_autoscaling_enabled | default('false') }}
+  minReplicas: {{ survey_service_autoscaling_minReplicas|default(1) }}
+  maxReplicas: {{ survey_service_autoscaling_maxReplicas|default(2) }}
+  targetCPUUtilizationPercentage: {{ survey_service_autoscaling_targetCPUUtilizationPercentage|default(60) }}
+  targetMemoryUtilizationPercentage: {{ survey_service_autoscaling_targetMemoryUtilizationPercentage|default('') }}
+
