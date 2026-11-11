@@ -8,7 +8,7 @@ dockerhub: {{ docker_hub_url }}
 env:
   javaoptions: {{cb_ext_rts_java_mem_limit|default('-Xmx600m')}}
 
-replicaCount: {{cb_ext_rts_replicacount|default(1)}}
+replicaCount: {{cb_ext_rts_replicacount|default(2)}}
 repository: {{ image_cb_ext_rts_service }}
 image_tag: {{image_tag}}
 resources:
