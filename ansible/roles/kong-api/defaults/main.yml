@@ -271,6 +271,7 @@ ai_itsm_aurora_service_url: "http://aurora-igot-ticketing-service:4020"
 cb_ext_scorm_validation_service_url : "http://cb-ext-scorm-validation:7001"
 cb_ext_form_service_url: "http://cb-ext-form-service:8099"
 cb_ext_survey_service_url: "http://cb-ext-survey-service:8099"
+cb_org_hierarchy_service_url: "http://cb-org-hierarchy-service:8888"
 
 premium_consumer_rate_limits:
   - api: createContent
@@ -27935,3 +27936,181 @@ kong_apis:
         config.limit_by: credential
       - name: request-size-limiting
         config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: ltiAdminConfig
+    uris: "{{ ciosIntegration_prefix }}/v1/lti/admin/platform-config"
+    upstream_url: "{{ cios_content_service_url }}/ciosIntegration/v1/lti/admin/platform-config"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'contentAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: partnerCreateV2
+    uris: "{{ contentpartner_prefix }}/v2/create"
+    upstream_url: "{{ cb_pores_service_url }}/contentpartner/v2/create"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'contentUpdate'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: partnerUpdateV2
+    uris: "{{ contentpartner_prefix }}/v2/update"
+    upstream_url: "{{ cb_pores_service_url }}/contentpartner/v2/update"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'contentUpdate'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: ciosLtiSsoTest
+    uris: "{{ ciosIntegration_prefix }}/lti/ssotest"
+    upstream_url: "{{ cios_content_service_url }}/ciosIntegration/lti/ssotest"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: acl
+        config.whitelist:
+          - 'contentAccess'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: orgHierarchyLink
+    uris: "{{ org_service_prefix }}/v2/hierarchy/link"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/link"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: orgHierarchyUnlink
+    uris: "{{ org_service_prefix }}/v2/hierarchy/unlink"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/unlink"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: orgHierarchyMove
+    uris: "{{ org_service_prefix }}/v2/hierarchy/move"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/move"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: orgHierarchyRead
+    uris: "{{ org_service_prefix }}/v2/hierarchy/read"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/read"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: orgHierarchyBulkLink
+    uris: "{{ org_service_prefix }}/v2/hierarchy/bulk/link"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/bulk/link"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: orgHierarchyLevels
+    uris: "{{ org_service_prefix }}/v2/hierarchy/levels"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/levels"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: orgHierarchyComplete
+    uris: "{{ org_service_prefix }}/v2/hierarchy"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
