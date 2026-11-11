@@ -9,3 +9,12 @@ neo.timeout=30
 spring.redis.host={{ kp_redis_ip }}
 spring.redis.port=6379
 spring.redis.client-type=lettuce
+
+spring.kafka.bootstrap.servers={{ kafka_servers_list }}
+spring.datasource.url=jdbc:postgresql://{{ postgresql_host }}:{{ postgresql_port }}/sunbird
+cassandra.config.host={{ sunbird_cassandra_db_host }}
+accesstoken.publickey.basepath=={{search_device_basepath | default('/keys/')}}
+
+org.hierarchy.kafka.topic.edges={{env}}.org-hierarchy-edges
+org.hierarchy.kafka.consumer.group.id={{env}}.org-hierarchy-parentpath-group
+org.hierarchy.kafka.topic.failed.error={{env}}.org-hierarchy-failed-error
