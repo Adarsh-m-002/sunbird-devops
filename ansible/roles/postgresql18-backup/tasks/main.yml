@@ -1,0 +1,45 @@
+
+---
+- name: Ensure backup directory exists
+  file:
+    path: "{{ postgresql_backup_dir }}"
+    state: directory
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_user }}"
+    mode: "0750"
+
+- name: Generate backup filename
+  set_fact:
+    postgresql_backup_gzip_file_name: "postgresql_backup_{{ lookup('pipe', 'date +%Z-%Y-%m-%d-%H-%M-%S') }}.sql.gz"
+
+- name: Set backup file path
+  set_fact:
+    postgresql_backup_gzip_file_path: "{{ postgresql_backup_dir }}/{{ postgresql_backup_gzip_file_name }}"
+
+- name: Save PostgreSQL backup
+  shell: |
+    set -o pipefail
+    pg_dumpall | gzip > "{{ postgresql_backup_gzip_file_path }}"
+  args:
+    executable: /bin/bash
+  become_user: "{{ postgresql_user }}"
+  async: 3600
+  poll: 10
+
+- name: Validate PostgreSQL backup
+  command: gzip -t "{{ postgresql_backup_gzip_file_path }}"
+  become_user: "{{ postgresql_user }}"
+
+- name: Upload backup to GCS
+  include_role:
+    name: artifacts-upload-gcp
+  vars:
+    artifacts_container: "{{ backup_bucket }}/{{ postgresql_backup_folder }}"
+    artifact_path: "{{ postgresql_backup_gzip_file_path }}"
+    artifact: "{{ postgresql_backup_gzip_file_name }}"
+    service_account: "{{ gcp_backups_service_account }}"
+
+- name: Clean up backup directory after upload
+  file:
+    path: "{{ postgresql_backup_dir }}"
+    state: absent

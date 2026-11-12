@@ -1,0 +1,4 @@
+postgresql_backup_dir: /tmp/postgresql-backup
+postgresql_user: postgres
+backup_bucket: backup-bucket
+postgresql_backup_folder: postgresql-backup-{{ ansible_host }}

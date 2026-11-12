@@ -1,0 +1,8 @@
+- hosts: postgresql18-backup
+  become: yes
+  vars_files:
+    - ['{{inventory_dir}}/secrets.yml', 'secrets/{{env}}.yml']
+  roles:
+    - postgresql1-backup
+  tags:
+    - postgresql18-backup
