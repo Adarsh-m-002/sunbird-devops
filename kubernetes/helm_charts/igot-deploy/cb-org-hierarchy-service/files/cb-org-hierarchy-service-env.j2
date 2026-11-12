@@ -13,7 +13,7 @@ spring.redis.client-type=lettuce
 spring.kafka.bootstrap.servers={{ kafka_servers_list }}
 spring.datasource.url=jdbc:postgresql://{{ postgresql_host }}:{{ postgresql_port }}/sunbird
 cassandra.config.host={{ sunbird_cassandra_db_host }}
-accesstoken.publickey.basepath=={{search_device_basepath | default('/keys/')}}
+accesstoken.publickey.basepath={{search_device_basepath | default('/keys/')}}
 
 org.hierarchy.kafka.topic.edges={{env}}.org-hierarchy-edges
 org.hierarchy.kafka.consumer.group.id={{env}}.org-hierarchy-parentpath-group
