@@ -1,0 +1,110 @@
+
+---
+- name: Uninstall prometheus-node-exporter from apt repo
+  raw: |
+    if dpkg-query -W -f='${Status}' prometheus-node-exporter 2>/dev/null | grep -q 'install ok installed'; then
+      DEBIAN_FRONTEND=noninteractive apt-get remove -y prometheus-node-exporter
+      echo "ANSIBLE_CHANGED"
+    else
+      echo "ANSIBLE_UNCHANGED"
+    fi
+  register: node_exporter_remove
+  changed_when: "'ANSIBLE_CHANGED' in node_exporter_remove.stdout"
+
+- name: Cleanup previous install config
+  file:
+    path: /etc/default/prometheus-node-exporter
+    state: absent
+
+- name: Check required packages
+  raw: |
+    for pkg in curl tar bzip2; do
+      dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q 'install ok installed' || echo "$pkg"
+    done
+  register: missing_packages
+  changed_when: false
+
+- name: Install needed packages
+  raw: |
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y {{ missing_packages.stdout_lines | join(' ') }}
+  when: missing_packages.stdout | trim != ''
+  register: install_packages
+  changed_when: install_packages.rc == 0
+
+- name: Create prometheus system group
+  group:
+    name: "{{ prometheus_exporters_common_group }}"
+    system: yes
+    state: present
+
+- name: Create prometheus system user
+  user:
+    name: "{{ prometheus_exporters_common_user }}"
+    system: yes
+    shell: "/sbin/nologin"
+    group: "{{ prometheus_exporters_common_group }}"
+    createhome: no
+
+- name: Create prometheus directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_exporters_common_user }}"
+    group: "{{ prometheus_exporters_common_group }}"
+    mode: "0755"
+  with_items:
+    - "{{ prometheus_exporters_common_root_dir }}"
+    - "{{ prometheus_exporters_common_dist_dir }}"
+    - "{{ prometheus_exporters_common_log_dir }}"
+    - "{{ prometheus_exporters_common_conf_dir }}"
+
+- name: Download prometheus node exporter binary
+  get_url:
+    url: "{{ prometheus_node_exporter_download_url }}"
+    dest: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}.tar.gz"
+
+- name: Unarchive binary tarball
+  unarchive:
+    copy: no
+    src: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}.tar.gz"
+    dest: "{{ prometheus_exporters_common_dist_dir }}"
+    creates: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}/node_exporter"
+  register: prometheus_node_exporter_updated
+  notify:
+    - restart node exporter
+
+- name: Update group and owner for files
+  file:
+    path: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}"
+    state: directory
+    recurse: yes
+    owner: "{{ prometheus_exporters_common_user }}"
+    group: "{{ prometheus_exporters_common_group }}"
+  when: prometheus_node_exporter_updated is changed
+
+- name: Create symlink to the current release
+  file:
+    src: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}"
+    path: "{{ prometheus_exporters_common_root_dir }}/node_exporter_current"
+    state: link
+
+- name: Create systemd service unit
+  template:
+    src: prometheus-node-exporter.service.j2
+    dest: /etc/systemd/system/prometheus-node-exporter.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reenable node exporter service
+    - restart node exporter
+
+- meta: flush_handlers
+
+- name: Ensure prometheus node exporter service is enabled and started
+  service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: yes

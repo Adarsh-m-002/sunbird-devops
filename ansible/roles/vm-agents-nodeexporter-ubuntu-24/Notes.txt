@@ -1,0 +1,207 @@
+# VM Agents Node Exporter Role
+
+## 1. Overview
+
+This Ansible role installs and configures Prometheus Node Exporter on Ubuntu servers.
+
+The role also prepares a dedicated Python 3.11 environment for compatibility with the existing Ansible 2.8.19 installation.
+
+### Environment details
+
+| Component | Version / Configuration |
+|---|---|
+| Operating System | Ubuntu 24.04 LTS |
+| Ansible Control Node | Jenkins |
+| Ansible Version | 2.8.19 |
+| Control Node Python | Python 3.10 |
+| Default Target Python | Python 3.12 |
+| Ansible Target Python | Python 3.11.18 |
+| Python Virtual Environment | /opt/ansible-python311 |
+| Node Exporter | Version configured through role variables |
+
+## 2. Why Python 3.11 is required
+
+Ansible 2.8.19 uses the Python `imp` module, which was removed in Python 3.12.
+
+When Ansible executes modules using Python 3.12, it can fail with:
+
+```text
+ModuleNotFoundError: No module named 'imp'
+```
+
+To maintain compatibility without upgrading Ansible or changing Ubuntu's default Python, a separate Python 3.11 installation and virtual environment are used.
+
+## 3. Python 3.11 installation
+
+The role automatically checks whether Python 3.11 is installed.
+
+If missing, it installs Python 3.11 using the approved Deadsnakes PPA.
+
+Manual installation commands:
+
+```bash
+sudo apt update
+sudo apt install software-properties-common -y
+
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+
+sudo apt update
+
+sudo apt install python3.11 python3.11-venv -y
+```
+
+Verify:
+
+```bash
+python3.11 --version
+```
+
+Expected:
+
+```text
+Python 3.11.18
+```
+
+Note: The PPA must be approved by the organization. An approved internal package repository can be used instead.
+
+## 4. Create Python virtual environment
+
+The role creates:
+
+```text
+/opt/ansible-python311
+```
+
+Manual creation:
+
+```bash
+sudo python3.11 -m venv /opt/ansible-python311
+```
+
+Install dependencies:
+
+```bash
+sudo /opt/ansible-python311/bin/pip install --upgrade pip
+
+sudo /opt/ansible-python311/bin/pip install \
+    cffi \
+    cryptography \
+    pyOpenSSL \
+    "urllib3<2"
+```
+
+Verify:
+
+```bash
+/opt/ansible-python311/bin/python --version
+```
+
+## 5. Python dependencies
+
+The following dependencies are installed in the virtual environment:
+
+| Dependency | Purpose |
+|---|---|
+| cffi | Foreign function interface |
+| cryptography | Cryptographic operations |
+| pyOpenSSL | OpenSSL integration |
+| urllib3 | HTTP communication |
+
+Verify:
+
+```bash
+/opt/ansible-python311/bin/python -c "
+import cffi
+import cryptography
+import OpenSSL
+import urllib3
+print('All Python dependencies are available')
+"
+```
+
+## 6. Ansible interpreter configuration
+
+Configure the following in the inventory:
+
+```ini
+[all:vars]
+ansible_python_interpreter=/opt/ansible-python311/bin/python
+```
+
+The role also checks and prepares the Python environment before executing Node Exporter installation tasks.
+
+For initial bootstrap, disable automatic fact gathering until Python 3.11 is ready:
+
+```yaml
+gather_facts: no
+```
+
+## 7. APT package management compatibility
+
+Ubuntu 24.04 provides `python3-apt` for its default Python 3.12.
+
+This package is not directly compatible with the Python 3.11 virtual environment.
+
+Therefore, APT operations in this role use the Ansible `raw` module with `apt-get` commands instead of the Ansible `apt` or `package` modules.
+
+This avoids the following error:
+
+```text
+Could not import python modules: apt, apt_pkg.
+Please install python3-apt package.
+```
+
+Other Ansible modules such as `file`, `group`, `user`, `get_url`, `unarchive`, `template` and `service` continue using Python 3.11.
+
+## 8. Execution
+
+Run from Jenkins:
+
+```bash
+ansible-playbook \
+-i inventory/env/hosts \
+bootstrap.yml \
+--tags node_exporter \
+--extra-vars "hosts=10.175.5.129 ansible_python_interpreter=/opt/ansible-python311/bin/python" \
+--vault-password-file /var/lib/jenkins/secrets/vault-pass -v
+```
+
+## 9. Important considerations
+
+1. Do not modify Ubuntu's default `/usr/bin/python3` symlink.
+2. Do not remove or replace Python 3.12.
+3. Do not modify PostgreSQL configuration or restart PostgreSQL as part of Python setup.
+4. Install the Python environment on every applicable managed server.
+5. Use an approved package repository for production installations.
+6. Keep the virtual environment isolated from Ubuntu's system Python packages.
+7. Python 3.11 is a compatibility workaround for Ansible 2.8.19. Plan a separate controlled Ansible upgrade.
+
+## 10. Troubleshooting
+
+### Python 3.11 not found
+
+```bash
+/usr/bin/python3.11 --version
+```
+
+### Virtual environment missing
+
+```bash
+sudo python3.11 -m venv /opt/ansible-python311
+```
+
+### CFFI dependency missing
+
+```bash
+/opt/ansible-python311/bin/pip install cffi cryptography pyOpenSSL "urllib3<2"
+```
+
+### APT module error
+
+Avoid the Ansible `apt` and `package` modules with this Python 3.11 environment. Use `raw` and `apt-get` for package operations.
+
+---
+
+**Role:** vm-agents-nodeexporter  
+**Maintained for:** Ansible 2.8.19  
+**Target OS:** Ubuntu 24.04 LTS
