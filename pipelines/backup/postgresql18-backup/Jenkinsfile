@@ -25,10 +25,7 @@ node() {
                 jobName = sh(returnStdout: true, script: "echo $JOB_NAME").split('/')[-1].trim()
                 currentWs = sh(returnStdout: true, script: 'pwd').trim()
                 ansiblePlaybook = "${currentWs}/ansible/postgresql18-backup.yml"
-                ansibleExtraArgs = """
-               --vault-password-file /var/lib/jenkins/secrets/vault-pass
-               --extra-vars "ansible_python_interpreter=/opt/ansible-python311/bin/python"
-                """.trim()
+                ansibleExtraArgs = "--vault-password-file /var/lib/jenkins/secrets/vault-pass --extra-vars ansible_python_interpreter=/opt/ansible-python311/bin/python"
                 values.put('currentWs', currentWs)
                 values.put('env', envDir)
                 values.put('module', module)
