@@ -26150,6 +26150,7 @@ kong_apis:
       - "{{ statsd_pulgin }}"
       - name: acl
         config.whitelist:
+          - 'contentAccess'
           - 'itsmAuroraAccess'
           - 'itsmAccess'
       - name: rate-limiting
