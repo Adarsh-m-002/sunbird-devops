@@ -18,3 +18,18 @@ accesstoken.publickey.basepath={{search_device_basepath | default('/keys/')}}
 org.hierarchy.kafka.topic.edges={{env}}.org-hierarchy-edges
 org.hierarchy.kafka.consumer.group.id={{env}}.org-hierarchy-parentpath-group
 org.hierarchy.kafka.topic.failed.error={{env}}.org-hierarchy-failed-error
+
+cloud.storage.type.name={{ cloud_service_provider }}
+cloud.storage.key={{ cloud_storage_key }}
+cloud.storage.secret={{ cloud_storage_secret | replace('\n', '\\n')}}
+cloud.storage.endpoint={{ cloud_storage_endpoint }}
+org-hierarchy.bulk.upload.container-name=orghierarchy
+ 
+org-hierarchy.elasticsearch.host={{ elasticsearch_host }}
+org-hierarchy.elasticsearch.port={{ elasticsearch_http_port }}
+org-hierarchy.elasticsearch.username={{ elasticsearch_username }}
+org-hierarchy.elasticsearch.password={{ elasticsearch_password }}
+org-hierarchy.elasticsearch.index-alias=org_alias
+
+org-hierarchy.bulk.upload.kafka.topic={{env}}.org.hierarchy.bulk.upload.event
+org-hierarchy.bulk.upload.kafka.consumer-group=org-hierarchy-bulk-upload-group
