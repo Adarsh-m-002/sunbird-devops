@@ -28204,7 +28204,7 @@ kong_apis:
 
   - name: providerAccessRuleNotificationUpsert
     uris: "{{ cb_ext_course_prefix }}/provider/v1/notification/upsert"
-    upstream_url: "{{ cb_ext_course_service_url }}/accessSettings/provider/v1/upsert"
+    upstream_url: "{{ cb_ext_course_service_url }}/accessSettings/provider/v1/notification/upsert"
     strip_uri: true
     plugins:
       - name: jwt
@@ -28222,7 +28222,7 @@ kong_apis:
 
   - name: providerAccessRuleNotificationRead
     uris: "{{ cb_ext_course_prefix }}/provider/v1/notification/read"
-    upstream_url: "{{ cb_ext_course_service_url }}/accessSettings/v1/notification/read"
+    upstream_url: "{{ cb_ext_course_service_url }}/accessSettings/provider/v1/notification/read"
     strip_uri: true
     plugins:
       - name: jwt
