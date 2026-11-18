@@ -28238,4 +28238,34 @@ kong_apis:
         config.limit_by: credential
       - name: request-size-limiting
         config.allowed_payload_size: "{{ medium_request_size_limit }}"
+
+  - name: orgHierarchyOrgLookup
+    uris: "{{ org_service_prefix }}/v2/hierarchy/org-lookup"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/org-lookup"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
+
+  - name: orgHierarchyUnmappedOrgs
+    uris: "{{ org_service_prefix }}/v2/hierarchy/unmapped-orgs"
+    upstream_url: "{{ cb_org_hierarchy_service_url }}/org/v2/hierarchy/unmapped-orgs"
+    strip_uri: true
+    plugins:
+      - name: jwt
+      - name: cors
+      - "{{ statsd_pulgin }}"
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "{{ medium_rate_limit_per_hour }}"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "{{ small_request_size_limit }}"
         
